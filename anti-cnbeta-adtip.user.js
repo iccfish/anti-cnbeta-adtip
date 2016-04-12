@@ -21,10 +21,10 @@
         };
     } catch (e) {}
     try {
+        uw.checkBlock = {
+            on: function() {}
+        };
         uw.document.addEventListener("DOMContentLoaded", function() {
-            uw.checkBlock = {
-                on: function() {}
-            };
             if (uw.CheckBlock) uw.CheckBlock.prototype.on = function() {};
         });
     } catch (e) {}
@@ -49,4 +49,8 @@
         style.textContent = ".cbhelp{height:" + Math.round((Math.random() + 1) * 113) + "px!important; width:" + Math.round((Math.random() + 1) * 113) + "px!important; visibility: hidden; position: fixed; opacity:0; left: " + Math.round((((Math.random() + 1) * 2000) * (Math.random() > 0.5 ? 1 : -1))) + "px; }";
         document.head.appendChild(style);
     })();
+    Object.defineProperty(uw, "onload", {
+        get: function() {},
+        set: function() {}
+    });
 }).apply(unsafeWindow);
