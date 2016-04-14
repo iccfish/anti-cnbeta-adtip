@@ -1,14 +1,13 @@
 // ==UserScript==
 // @name         CnBeta辅助工具
 // @namespace    http://www.fishlee.net/
-// @version      3.1
+// @version      4.0
 // @description  CnBeta上的辅助性工具，用于去除广告等
 // @author       iFish(木鱼)
 // @match        http://www.cnbeta.com/*
 // @grant        unsafeWindow
 // @run-at       document-body
 // ==/UserScript==
-
 /********************************************************************
  *
  *  不准备再继续修改了。因为跟 Cnbeta 这么玩真的毫无聊，
@@ -26,13 +25,14 @@
  *  大家都是搞IT的，何必在这种事情上纠缠不清是吧。
  *
  *********************************************************************/
-
-
 (function() {
     'use strict';
     var oe = this.eval;
     var uw = this;
     var $ = this.jQuery;
+
+    //以下N种方法，往往只有那么一两种有效，其它大多是为了兼容或留后手或做历史记录原因保留的
+    
     try {
         uw.checkBlock = {
             on: function() {}
@@ -95,4 +95,21 @@
             };
         }
     })();
+    //===========================================================================================
+    // 此方法 by xinggsf (original from http://bbs.kafan.cn/thread-2037276-1-1.html)
+    // 
+    // 说实话作为一个有强迫症的人，这个方法不是很喜欢，因为这个方法拦截的是插入反屏蔽提示的过程
+    // 然而作为一个有强迫症的人来说，到这里相当于Cnbeta已经知道这个事儿了。
+    // 强迫症让我接受不了这样的事情，丫检测个屁啊，让你没法检测或检测不出才是心里可以接受的方法
+    // 不过从这个方法里我知道了How to hook掉Node的方法，之前想这么干来着结果没时间去查怎么Hook掉DOM的原型
+    // 
+    // ===========================================================================================
+    var ib = uw.Node.prototype.insertBefore;
+    uw.Node.prototype.insertBefore = function(t, p) {
+        if (t.tagName === 'DIV' && this.tagName === 'BODY' && t.querySelector('.mask-close')) {
+            uw.Node.prototype.insertBefore = ib;
+            return;
+        }
+        ib.apply(this, Array.prototype.slice.call(arguments));
+    };
 }).apply(unsafeWindow);
